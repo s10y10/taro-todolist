@@ -10,7 +10,7 @@ import {
   AtMessage
 } from "taro-ui";
 import { useState, useEffect, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
+import md5 from "md5";
 import "./index.scss";
 
 type StorageItem = {
@@ -44,7 +44,7 @@ export default () => {
 
   //获取保存的数据并过滤出两个列表
   useEffect(() => {
-    const allData: StorageItem[] = getStorageSync(STORAGE_KEY);
+    const allData: StorageItem[] = getStorageSync(STORAGE_KEY) || [];
     allDataRef.current = allData;
     filterData();
   }, []);
@@ -63,9 +63,9 @@ export default () => {
       });
       return;
     }
-    const uid = uuidv4();
+    const id = md5(Date.now());
     const newItem: StorageItem = {
-      id: uid,
+      id,
       isComplete: false,
       value: inputValue
     };
