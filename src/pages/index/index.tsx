@@ -1,7 +1,15 @@
+import Taro, { setStorageSync, getStorageSync } from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
-import { AtButton, AtInput, AtList, AtListItem, AtDivider } from "taro-ui";
+import {
+  AtButton,
+  AtInput,
+  AtList,
+  AtDivider,
+  AtIcon,
+  AtSwitch,
+  AtMessage
+} from "taro-ui";
 import { useState, useEffect, useRef } from "react";
-import { setStorageSync, getStorageSync } from "@tarojs/taro";
 import { v4 as uuidv4 } from "uuid";
 import "./index.scss";
 
@@ -48,7 +56,13 @@ export default () => {
 
   //添加一个项目到todoList
   const handleAdd = () => {
-    if (!inputValue) return;
+    if (!inputValue) {
+      (Taro as any).atMessage({
+        message: "啥都没输入啊",
+        type: "error"
+      });
+      return;
+    }
     const uid = uuidv4();
     const newItem: StorageItem = {
       id: uid,
@@ -60,15 +74,26 @@ export default () => {
     filterData();
   };
 
+  //删除一个项目
+  const handleDeleteItem = item => {
+    const foundIndex = allDataRef.current!.findIndex(it => item.id === it.id);
+    if (foundIndex !== -1) {
+      allDataRef.current?.splice(foundIndex, 1);
+      setStorageSync(STORAGE_KEY, allDataRef.current);
+      filterData();
+    }
+  };
+
   //当切换开关时候的回调
-  const itemSwitchChangeHandle = (item: StorageItem, event) => {
-    item.isComplete = event.target.value;
+  const itemSwitchChangeHandle = (item: StorageItem, newValue) => {
+    item.isComplete = newValue;
     setStorageSync(STORAGE_KEY, allDataRef.current);
     filterData();
   };
 
   return (
     <View className="index">
+      <AtMessage />
       <Text className="title">输入一个新的todo项</Text>
       <AtInput
         name="value"
@@ -76,40 +101,60 @@ export default () => {
         value={inputValue}
         onChange={handleChange}
       ></AtInput>
-      <AtButton type="primary" onClick={handleAdd}>
+      <AtButton type="primary" size="small" onClick={handleAdd}>
         添加
       </AtButton>
       <AtDivider />
-      <Text>未完成</Text>
+      <Text>未完成：</Text>
       <AtList>
         {todoArray.map(item => {
           return (
-            <AtListItem
-              title={item.value}
-              onSwitchChange={event => {
-                itemSwitchChangeHandle(item, event);
-              }}
-              key={item.id}
-              isSwitch
-              switchIsCheck={false}
-            />
+            <View className="todo-item" key={item.id}>
+              <Text>{item.value}</Text>
+              <View className="operate">
+                <AtIcon
+                  value="trash"
+                  size="30"
+                  color="#F00"
+                  onClick={() => {
+                    handleDeleteItem(item);
+                  }}
+                ></AtIcon>
+                <AtSwitch
+                  checked={false}
+                  onChange={event => {
+                    itemSwitchChangeHandle(item, event);
+                  }}
+                />
+              </View>
+            </View>
           );
         })}
       </AtList>
       <AtDivider />
-      <Text>已完成</Text>
+      <Text>已完成：</Text>
       <AtList>
         {completeArray.map(item => {
           return (
-            <AtListItem
-              title={item.value}
-              onSwitchChange={event => {
-                itemSwitchChangeHandle(item, event);
-              }}
-              key={item.id}
-              isSwitch
-              switchIsCheck
-            />
+            <View className="todo-item" key={item.id}>
+              <Text>{item.value}</Text>
+              <View className="operate">
+                <AtIcon
+                  value="trash"
+                  size="30"
+                  color="#F00"
+                  onClick={() => {
+                    handleDeleteItem(item);
+                  }}
+                ></AtIcon>
+                <AtSwitch
+                  checked
+                  onChange={event => {
+                    itemSwitchChangeHandle(item, event);
+                  }}
+                />
+              </View>
+            </View>
           );
         })}
       </AtList>

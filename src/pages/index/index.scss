@@ -3,3 +3,18 @@
 @import "taro-ui/dist/style/components/icon.scss";
 @import "taro-ui/dist/style/components/divider.scss";
 @import "taro-ui/dist/style/components/list.scss";
+@import "taro-ui/dist/style/components/switch.scss";
+@import "taro-ui/dist/style/components/message.scss";
+
+.index{
+    .todo-item{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
+        .operate{
+            display:flex;
+            align-items: center;
+        }
+    }
+}
