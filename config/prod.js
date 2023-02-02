@@ -2,10 +2,10 @@ module.exports = {
   env: {
     NODE_ENV: '"production"'
   },
-  defineConstants: {
-  },
+  defineConstants: {},
   mini: {},
   h5: {
+    publicPath: "./"
     /**
      * WebpackChain 插件配置
      * @docs https://github.com/neutrinojs/webpack-chain
@@ -34,4 +34,4 @@ module.exports = {
     //     }))
     // }
   }
-}
+};
