@@ -1,33 +1,19 @@
 import Taro, { setStorageSync, getStorageSync } from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
-import {
-  AtButton,
-  AtInput,
-  AtList,
-  AtDivider,
-  AtIcon,
-  AtSwitch,
-  AtMessage
-} from "taro-ui";
+import { AtButton, AtInput, AtDivider, AtMessage } from "taro-ui";
 import { useState, useEffect, useRef } from "react";
 import md5 from "md5";
 import "./index.scss";
+import Itemlist from "./Itemlist";
+import { StorageItem } from "./types";
 
-type StorageItem = {
-  id: string;
-  value: string;
-  isComplete: boolean;
-};
-
-const STORAGE_KEY = "taro-dotolist-storage";
+const STORAGE_KEY: string = "taro-dotolist-storage";
 
 export default () => {
   const allDataRef = useRef<StorageItem[]>();
 
   const [inputValue, setInputValue] = useState<any>("");
-
   const [todoArray, setTodoArray] = useState<StorageItem[]>([]);
-
   const [completeArray, setComplateArray] = useState<StorageItem[]>([]);
 
   //过滤两个列表的数据
@@ -50,7 +36,7 @@ export default () => {
   }, []);
 
   //设置输入框内容
-  const handleChange = newVal => {
+  const handleChange = (newVal: string) => {
     setInputValue(newVal);
   };
 
@@ -67,15 +53,17 @@ export default () => {
     const newItem: StorageItem = {
       id,
       isComplete: false,
-      value: inputValue
+      value: inputValue,
+      time: Date.now()
     };
     allDataRef.current?.push(newItem);
     setStorageSync(STORAGE_KEY, allDataRef.current);
     filterData();
+    handleChange("");
   };
 
   //删除一个项目
-  const handleDeleteItem = item => {
+  const handleDeleteItem = (item: StorageItem) => {
     const foundIndex = allDataRef.current!.findIndex(it => item.id === it.id);
     if (foundIndex !== -1) {
       allDataRef.current?.splice(foundIndex, 1);
@@ -85,7 +73,7 @@ export default () => {
   };
 
   //当切换开关时候的回调
-  const itemSwitchChangeHandle = (item: StorageItem, newValue) => {
+  const itemSwitchChangeHandle = (item: StorageItem, newValue: boolean) => {
     item.isComplete = newValue;
     setStorageSync(STORAGE_KEY, allDataRef.current);
     filterData();
@@ -106,58 +94,18 @@ export default () => {
       </AtButton>
       <AtDivider />
       <Text>未完成：</Text>
-      <AtList>
-        {todoArray.map(item => {
-          return (
-            <View className="todo-item" key={item.id}>
-              <Text>{item.value}</Text>
-              <View className="operate">
-                <AtIcon
-                  value="trash"
-                  size="30"
-                  color="#F00"
-                  onClick={() => {
-                    handleDeleteItem(item);
-                  }}
-                ></AtIcon>
-                <AtSwitch
-                  checked={false}
-                  onChange={event => {
-                    itemSwitchChangeHandle(item, event);
-                  }}
-                />
-              </View>
-            </View>
-          );
-        })}
-      </AtList>
+      <Itemlist
+        dataList={todoArray}
+        handleDelete={handleDeleteItem}
+        handleSwitch={itemSwitchChangeHandle}
+      ></Itemlist>
       <AtDivider />
       <Text>已完成：</Text>
-      <AtList>
-        {completeArray.map(item => {
-          return (
-            <View className="todo-item" key={item.id}>
-              <Text>{item.value}</Text>
-              <View className="operate">
-                <AtIcon
-                  value="trash"
-                  size="30"
-                  color="#F00"
-                  onClick={() => {
-                    handleDeleteItem(item);
-                  }}
-                ></AtIcon>
-                <AtSwitch
-                  checked
-                  onChange={event => {
-                    itemSwitchChangeHandle(item, event);
-                  }}
-                />
-              </View>
-            </View>
-          );
-        })}
-      </AtList>
+      <Itemlist
+        dataList={completeArray}
+        handleDelete={handleDeleteItem}
+        handleSwitch={itemSwitchChangeHandle}
+      ></Itemlist>
     </View>
   );
 };
