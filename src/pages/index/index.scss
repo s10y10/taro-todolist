@@ -8,7 +8,6 @@
 
 
 .index{
-
     .todo-item{
         display: flex;
         align-items: center;
@@ -20,3 +19,24 @@
         }
     }
 }
+
+.fade-enter {
+	transform: translateX(100px);
+	opacity: 0;
+}
+.fade-enter-active{
+	transform: translateX(0);
+	opacity: 1;
+	transition: all 0.5s ease;
+}
+
+.fade-exit{
+    transform: translateX(0);
+    opacity: 1;
+}
+.fade-exit-active {
+	opacity: 0;
+	transform: translateX(100px);
+	transition: all 0.5s ease;
+}
+

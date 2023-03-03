@@ -98,6 +98,7 @@ export default () => {
         dataList={todoArray}
         handleDelete={handleDeleteItem}
         handleSwitch={itemSwitchChangeHandle}
+        checked={false}
       ></Itemlist>
       <AtDivider />
       <Text>已完成：</Text>
