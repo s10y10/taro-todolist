@@ -5,9 +5,13 @@
 @import "taro-ui/dist/style/components/list.scss";
 @import "taro-ui/dist/style/components/switch.scss";
 @import "taro-ui/dist/style/components/message.scss";
+@import "taro-ui/dist/style/components/tabs.scss";
 
 
 .index{
+    height: 100vh;
+    color: #ffffff;
+    background: linear-gradient(to right, #4b6cb7, #182848);
     .todo-item{
         display: flex;
         align-items: center;
