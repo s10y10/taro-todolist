@@ -34,7 +34,6 @@ specifiers:
   eslint-plugin-react: ^7.8.2
   eslint-plugin-react-hooks: ^4.2.0
   lodash: 4.17.15
-  md5: ^2.3.0
   react: ^18.0.0
   react-dom: ^18.0.0
   react-refresh: ^0.11.0
@@ -63,7 +62,6 @@ dependencies:
   '@tarojs/taro': 3.6.8_@types+react@18.0.28
   '@tarojs/taro-h5': 3.6.8_@types+react@18.0.28
   lodash: 4.17.15
-  md5: 2.3.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
@@ -4660,6 +4658,7 @@ packages:
 
   /charenc/0.0.2:
     resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
+    dev: true
 
   /chokidar/3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
@@ -5290,6 +5289,7 @@ packages:
 
   /crypt/0.0.2:
     resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
+    dev: true
 
   /crypto-random-string/2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
@@ -9510,6 +9510,7 @@ packages:
       charenc: 0.0.2
       crypt: 0.0.2
       is-buffer: 1.1.6
+    dev: true
 
   /mdast-util-compact/1.0.4:
     resolution: {integrity: sha512-3YDMQHI5vRiS2uygEFYaqckibpJtKq5Sj2c8JioeOQBU6INpKbdWzfyLqFFnDwEcEnRFIdMsguzs5pC1Jp4Isg==}

@@ -1,10 +1,10 @@
 import { View, Text } from "@tarojs/components";
-import { AtList, AtIcon, AtSwitch } from "taro-ui";
+import { AtIcon, AtSwitch } from "taro-ui";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 export default ({ dataList, handleDelete, handleSwitch, checked = true }) => {
   return (
-    <TransitionGroup component={AtList}>
+    <TransitionGroup>
       {dataList.map(item => {
         return (
           <CSSTransition timeout={500} classNames="fade" key={item.id}>

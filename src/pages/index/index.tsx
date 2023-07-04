@@ -1,20 +1,26 @@
-import Taro, { setStorageSync, getStorageSync } from "@tarojs/taro";
-import { View, Text } from "@tarojs/components";
-import { AtButton, AtInput, AtDivider, AtMessage } from "taro-ui";
-import { useState, useEffect, useRef } from "react";
-import md5 from "md5";
+import { View } from "@tarojs/components";
+import { getStorageSync, setStorageSync } from "@tarojs/taro";
+import { useEffect, useRef, useState } from "react";
+import { AtTabBar } from "taro-ui";
+import AddPanel from "./addPanel";
+import CompletedPanel from "./completedPanel";
 import "./index.scss";
-import Itemlist from "./Itemlist";
-import { StorageItem } from "./types";
+import TodoPanel from "./todoPanel";
+import type { StorageItem } from "./types";
 
 const STORAGE_KEY: string = "taro-dotolist-storage";
 
 export default () => {
   const allDataRef = useRef<StorageItem[]>();
-
-  const [inputValue, setInputValue] = useState<any>("");
   const [todoArray, setTodoArray] = useState<StorageItem[]>([]);
+  const [tabList,setTabList] = useState<any>([]);
   const [completeArray, setComplateArray] = useState<StorageItem[]>([]);
+  const [current, setCurrent] = useState(0);
+
+    
+  const handleClick = value => {
+    setCurrent(value);
+  };
 
   //过滤两个列表的数据
   const filterData = () => {
@@ -26,6 +32,11 @@ export default () => {
     );
     setTodoArray(filterTodoItems);
     setComplateArray(filterCompleteItems);
+    setTabList([
+      { title: "待办事项",text:filterTodoItems.length || '' },
+      { title: "已办事项",text:filterCompleteItems.length || '' },
+      { title: "新增" }
+    ])
   };
 
   //获取保存的数据并过滤出两个列表
@@ -35,21 +46,9 @@ export default () => {
     filterData();
   }, []);
 
-  //设置输入框内容
-  const handleChange = (newVal: string) => {
-    setInputValue(newVal);
-  };
 
-  //添加一个项目到todoList
-  const handleAdd = () => {
-    if (!inputValue) {
-      (Taro as any).atMessage({
-        message: "啥都没输入啊",
-        type: "error"
-      });
-      return;
-    }
-    const id = md5(Date.now());
+  const addItemCB = (inputValue) => {
+    const id = `${Date.now()}`;
     const newItem: StorageItem = {
       id,
       isComplete: false,
@@ -59,21 +58,20 @@ export default () => {
     allDataRef.current?.push(newItem);
     setStorageSync(STORAGE_KEY, allDataRef.current);
     filterData();
-    handleChange("");
   };
 
-  //删除一个项目
-  const handleDeleteItem = (item: StorageItem) => {
-    const foundIndex = allDataRef.current!.findIndex(it => item.id === it.id);
-    if (foundIndex !== -1) {
-      allDataRef.current?.splice(foundIndex, 1);
-      setStorageSync(STORAGE_KEY, allDataRef.current);
-      filterData();
-    }
-  };
+    //删除一个项目
+    const deleteItemCB = (item: StorageItem) => {
+      const foundIndex = allDataRef.current!.findIndex(it => item.id === it.id);
+      if (foundIndex !== -1) {
+        allDataRef.current?.splice(foundIndex, 1);
+        setStorageSync(STORAGE_KEY, allDataRef.current);
+        filterData();
+      }
+    };
 
-  //当切换开关时候的回调
-  const itemSwitchChangeHandle = (item: StorageItem, newValue: boolean) => {
+      //当切换开关时候的回调
+  const itemSwitchCB = (item: StorageItem, newValue: boolean) => {
     item.isComplete = newValue;
     setStorageSync(STORAGE_KEY, allDataRef.current);
     filterData();
@@ -81,32 +79,15 @@ export default () => {
 
   return (
     <View className="index">
-      <AtMessage />
-      <Text className="title">输入一个新的todo项</Text>
-      <AtInput
-        name="value"
-        placeholder="在这里填一个要新增的项"
-        value={inputValue}
-        onChange={handleChange}
-      ></AtInput>
-      <AtButton type="primary" size="small" onClick={handleAdd}>
-        添加
-      </AtButton>
-      <AtDivider />
-      <Text>未完成：</Text>
-      <Itemlist
-        dataList={todoArray}
-        handleDelete={handleDeleteItem}
-        handleSwitch={itemSwitchChangeHandle}
-        checked={false}
-      ></Itemlist>
-      <AtDivider />
-      <Text>已完成：</Text>
-      <Itemlist
-        dataList={completeArray}
-        handleDelete={handleDeleteItem}
-        handleSwitch={itemSwitchChangeHandle}
-      ></Itemlist>
+      <>{current === 2 && <AddPanel addItemCB={addItemCB} />}</>
+      <>{current === 1 && <CompletedPanel data={completeArray} deleteItemCB={deleteItemCB} itemSwitchCB={itemSwitchCB} />}</>
+      <>{current === 0 && <TodoPanel data={todoArray}  deleteItemCB={deleteItemCB} itemSwitchCB={itemSwitchCB} />}</>
+      <AtTabBar
+        fixed
+        tabList={tabList}
+        onClick={handleClick.bind(this)}
+        current={current}
+      />
     </View>
   );
 };
