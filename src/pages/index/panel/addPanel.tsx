@@ -20,7 +20,7 @@ function AddPanel({ addItemCB }) {
       return;
     }
     addItemCB(inputValue);
-    handleChange("");
+    return handleChange("");
   };
 
   return (
