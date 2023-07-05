@@ -4,7 +4,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 export default ({ dataList, handleDelete, handleSwitch, checked = true }) => {
   return (
-    <TransitionGroup>
+    <TransitionGroup component={View}>
       {dataList.map(item => {
         return (
           <CSSTransition timeout={500} classNames="fade" key={item.id}>
