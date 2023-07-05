@@ -2,10 +2,10 @@ import { View } from "@tarojs/components";
 import { getStorageSync, setStorageSync } from "@tarojs/taro";
 import { useEffect, useRef, useState } from "react";
 import { AtTabBar } from "taro-ui";
-import AddPanel from "./addPanel";
-import CompletedPanel from "./completedPanel";
 import "./index.scss";
-import TodoPanel from "./todoPanel";
+import AddPanel from "./panel/addPanel";
+import CompletedPanel from "./panel/completedPanel";
+import TodoPanel from "./panel/todoPanel";
 import type { StorageItem } from "./types";
 
 const STORAGE_KEY: string = "taro-dotolist-storage";
